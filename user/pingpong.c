@@ -21,7 +21,6 @@ int main(int argc, char* argv[])
     if (read(p[0][0], buf, 1) > 0)
     {
       printf("%d: received ping\n", getpid());
-      write(1, buf, 1);
     }
     else     
     {
@@ -45,7 +44,6 @@ int main(int argc, char* argv[])
     if (read(p[1][0], buf, 1) > 0)
     {
       printf("%d: received pong\n", getpid());
-      write(1, buf, 1);
     }
     else
     {
