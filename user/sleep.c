@@ -3,11 +3,10 @@
 
 int main(int argc, char* argv[]) {
   if (argc != 2) {
-    fprintf(2, "È±ÉÙ²ÎÊý!\n");
+    fprintf(2, "usage: sleep [tick ...]\n");
     exit(1);
   }
 
-  int ticks = atoi(argv[1]);
-  int ret = sleep(ticks);
-  exit(ret);
+  sleep(atoi(argv[1]));
+  exit(0);
 }
