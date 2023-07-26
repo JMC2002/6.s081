@@ -14,9 +14,9 @@ void primeFunc(int left[2])
   close(left[pipeWrite]);
   if (!read(left[pipeRead], &prime, sizeof(prime)))
   { // 读取失败，筛法结束，递归出口
+    close(left[pipeRead]);
     exit(0);
   }
-  close(left[pipeRead]);
 
   printf("prime %d\n", prime);
   int right[2], pid;
@@ -29,6 +29,9 @@ void primeFunc(int left[2])
   if ((pid = fork()) < 0)
   {
     write(stderr, "fork failed\n", 12);
+    close(right[pipeRead]);
+    close(right[pipeWrite]);
+    close(left[pipeRead]);
     exit(-1);
   }
   else if (!pid)
