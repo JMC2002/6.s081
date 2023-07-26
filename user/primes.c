@@ -65,7 +65,7 @@ int main(int argc, char* argv[])
 
   if ((pid = fork()) < 0)
   {
-    write(stderr, "fork failed\n", 12);)
+    write(stderr, "fork failed\n", 12);
     exit(-1);
   }
   else if (!pid)
