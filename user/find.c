@@ -12,12 +12,18 @@
 char* fmtname(char* path)
 {
   char* p;
-  // Find first character after last slash.
+  // 找到最后一个 / 后面的字符
   for (p = path + strlen(path); p >= path && *p != '/'; p--)
     ;
   return p + 1;
 }
 
+/**
+ * @brief 在指定路径下查找指定文件
+ * 
+ * @param path 路径
+ * @param filename 文件名
+ */
 void find(char* path, const char* filename)
 {
   char buf[BUFSIZE], * p;
@@ -25,11 +31,13 @@ void find(char* path, const char* filename)
   struct dirent de;
   struct stat st;
 
+  // 尝试打开文件
   if ((fd = open(path, O_RDONLY)) < 0) {
     fprintf(STDERR, "find: cannot open %s\n", path);
     return;
   }
 
+  // 尝试获取文件信息
   if (fstat(fd, &st) < 0) {
     fprintf(STDERR, "find: cannot stat %s\n", path);
     close(fd);
@@ -43,18 +51,23 @@ void find(char* path, const char* filename)
     }
     break;
   case T_DIR:
+    // 如果路径过长，报错
     if (strlen(path) + 1 + DIRSIZ + 1 > sizeof buf) {
       printf("find: path too long\n");
       break;
     }
+
+    // 将路径拷贝到 buf 中
     strcpy(buf, path);
     p = buf + strlen(buf);
+    // 在路径后面加上 /
     *p++ = '/';
+    // 读取目录下的文件
     while (read(fd, &de, sizeof(de)) == sizeof(de)) {
-      if (de.inum == 0)
+      // 如果文件不存在，或者是 . 或者是 ..，则跳过
+      if (de.inum == 0 || strcmp(de.name, ".") == 0 || strcmp(de.name, "..") == 0)
         continue;
-      if (strcmp(de.name, ".") == 0 || strcmp(de.name, "..") == 0)
-        continue;
+      // 将文件名拷贝到 buf 中
       memmove(p, de.name, DIRSIZ);
       p[DIRSIZ] = 0;
       if (stat(buf, &st) < 0) {
