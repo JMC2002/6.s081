@@ -78,6 +78,7 @@ void find(char* path, const char* filename)
     }
     break;
   }
+  // 及时关闭文件，避免资源泄露
   close(fd);
 }
 
