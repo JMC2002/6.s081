@@ -13,7 +13,7 @@
 #include "kernel/types.h"
 #include "user/user.h"
 
-#define MAX_ARG_LEN 32
+#define MAX_ARG_LEN 512
 #define MAX_ARG_NUM 32
 #define STDIN 0
 #define STDOUT 1
@@ -65,6 +65,7 @@ int main(int argc, char* argv[])
         fprintf(STDERR, "xargs: exec error\n");
         exit(1);
       }
+      exit(0);
     }
     else
     {
