@@ -13,7 +13,7 @@
 #include "kernel/types.h"
 #include "user/user.h"
 
-#define MAX_ARG_LEN 512
+#define MAX_ARG_LEN 32
 #define MAX_ARG_NUM 32
 #define STDIN 0
 #define STDOUT 1
@@ -45,7 +45,7 @@ int main(int argc, char* argv[])
     fprintf(STDERR, "xargs: read error\n");
     exit(1);
   }
-  printf("%s", buf);
+
   // 将标准输入的内容作为命令行参数
   for (char* beg = buf, *end; (end = strchr(beg, '\n')); beg = end + 1)
   {
@@ -64,6 +64,10 @@ int main(int argc, char* argv[])
         fprintf(STDERR, "xargs: exec error\n");
         exit(1);
       }
+    }
+    else 
+    {
+      wait(NULL);
     }
   }
 
