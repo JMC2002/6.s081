@@ -49,8 +49,9 @@ int main(int argc, char* argv[])
   // 将标准输入的内容作为命令行参数
   for (char* beg = buf, *end, arg[MAX_ARG_NUM]; (end = strchr(beg, '\n')); beg = end + 1)
   {
+    memset(arg, 0, MAX_ARG_NUM);
     memcpy(arg, beg, end - beg);
-    arg[end - beg] = '\0';
+    // arg[end - beg] = '\0';
     cmd[argc - 1] = arg;
     int pid = fork();
     if (pid < 0) 
