@@ -18,6 +18,7 @@
 #define STDIN 0
 #define STDOUT 1
 #define STDERR 2
+#define NULL (void*)0
 
 
 
@@ -55,14 +56,17 @@ int main(int argc, char* argv[])
       else if (pid == 0)
       {
         // 子进程执行命令
-        cmd[argc - 2] = arg;
-        exec(cmd[0], cmd);
-        fprintf(STDERR, "exec error\n");
+        cmd[argc - 1] = arg;
+        if (exec(cmd[0], cmd) < 0)
+        {
+          fprintf(STDERR, "exec error\n");
+          exit(1);
+        }
       }
       else
       {
         // 父进程等待子进程结束
-        wait(0);
+        wait(NULL);
         i = 0;
       }
     }
