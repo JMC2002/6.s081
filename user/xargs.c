@@ -38,42 +38,34 @@ int main(int argc, char* argv[])
   }
 
   // 读取标准输入
-  char buf, arg[MAX_ARG_LEN];
-  for (int i = 0; read(STDIN, &buf, 1) > 0; )
+  char buf[MAX_ARG_LEN];
+  int n;
+  if ((n = read(STDIN, buf, MAX_ARG_LEN)) < 0) 
   {
-    if (buf == '\n')
-    {
-      // 读取到换行符，将参数传递给命令
-      arg[i] = '\0';
+    fprintf(STDERR, "xargs: read error\n");
+    exit(1);
+  }
 
-      // fork一个子进程执行命令
-      int pid = fork();
-      if (pid < 0)
+  // 将标准输入的内容作为命令行参数
+  for (int i = 0, j; (j = strchr(buf + i, '\n'); i = j + 1) 
+  {
+    buf[j] = '\0';
+    cmd[argc - 1] = buf + i;
+    int pid = fork();
+    if (pid < 0)
+    {
+      fprintf(STDERR, "xargs: fork error\n");
+      exit(1);
+    }
+    else if (pid == 0)
+    {
+      if (exec(argv[1], cmd) < 0)
       {
-        fprintf(STDERR, "fork error\n");
+        fprintf(STDERR, "xargs: exec error\n");
         exit(1);
       }
-      else if (pid == 0)
-      {
-        // 子进程执行命令
-        cmd[argc - 1] = arg;
-        if (exec(cmd[0], cmd) < 0)
-        {
-          fprintf(STDERR, "exec error\n");
-          exit(1);
-        }
-      }
-      else
-      {
-        // 父进程等待子进程结束
-        wait(NULL);
-        i = 0;
-      }
-    }
-    else
-    {
-      arg[i++] = buf;
     }
   }
+
   return 0;
 }
