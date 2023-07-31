@@ -47,19 +47,19 @@ int main(int argc, char* argv[])
   }
 
   // 将标准输入的内容作为命令行参数
-  for (int i = 0, j; (j = strchr(buf + i, '\n'); i = j + 1) 
+  for (char* beg = buf, end; end = strchr(beg, '\n'); beg = end + 1) 
   {
-    buf[j] = '\0';
-    cmd[argc - 1] = buf + i;
+    *end = '\0';
+    cmd[argc - 1] = beg;
     int pid = fork();
-    if (pid < 0)
+    if (pid < 0) 
     {
       fprintf(STDERR, "xargs: fork error\n");
       exit(1);
     }
-    else if (pid == 0)
+    else if (pid == 0) 
     {
-      if (exec(argv[1], cmd) < 0)
+      if (exec(argv[1], cmd) < 0) 
       {
         fprintf(STDERR, "xargs: exec error\n");
         exit(1);
