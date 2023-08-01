@@ -47,67 +47,68 @@ int main(int argc, char* argv[])
     exit(1);
   }
 
-  // 将标准输入的内容作为命令行参数
-  char arg[MAX_ARG_LEN];
-  for (int i = 0, j = 0; i < MAX_ARG_LEN && buf[i] != '\0'; i++)
-  {
-    if (buf[i] == '\n')
-    {
-      arg[j] = '\0';
-      int pid = fork();
-      if (pid < 0)
-      {
-        fprintf(STDERR, "xargs: fork error\n");
-        exit(1);
-      }
-      else if (pid == 0)
-      {
-        cmd[argc - 1] = arg;
-        if (exec(argv[1], cmd) < 0)
-        {
-          fprintf(STDERR, "xargs: exec error\n");
-          exit(1);
-        }
-        exit(0);
-      }
-      else
-      {
-        wait(NULL);
-        j = 0;
-      }
-    }
-    else
-    {
-      arg[j++] = buf[i];
-    }
-  }
-
-
-  //for (char* beg = buf, *end, arg[MAX_ARG_NUM]; (end = strchr(beg, '\n')); beg = end + 1)
+  //// 将标准输入的内容作为命令行参数
+  //char arg[MAX_ARG_LEN];
+  //for (int i = 0, j = 0; i < MAX_ARG_LEN && buf[i] != '\0'; i++)
   //{
-  //  *end = '\0';
-  //  strcpy(arg, buf); // 将命令行参数拷贝到arg中
-  //  cmd[argc - 1] = arg; // 将arg作为命令行参数
-  //  int pid = fork();
-  //  if (pid < 0)
+  //  if (buf[i] == '\n')
   //  {
-  //    fprintf(STDERR, "xargs: fork error\n");
-  //    exit(1);
-  //  }
-  //  else if (pid == 0)
-  //  {
-  //    if (exec(argv[1], cmd) < 0)
+  //    arg[j] = '\0';
+  //    int pid = fork();
+  //    if (pid < 0)
   //    {
-  //      fprintf(STDERR, "xargs: exec error\n");
+  //      fprintf(STDERR, "xargs: fork error\n");
   //      exit(1);
   //    }
-  //    exit(0);
+  //    else if (pid == 0)
+  //    {
+  //      cmd[argc - 1] = arg;
+  //      if (exec(argv[1], cmd) < 0)
+  //      {
+  //        fprintf(STDERR, "xargs: exec error\n");
+  //        exit(1);
+  //      }
+  //      exit(0);
+  //    }
+  //    else
+  //    {
+  //      wait(NULL);
+  //      j = 0;
+  //    }
   //  }
   //  else
   //  {
-  //    wait(NULL);
+  //    arg[j++] = buf[i];
   //  }
   //}
+
+
+  for (char* beg = buf, *end, arg[MAX_ARG_NUM]; (end = strchr(beg, '\n')); beg = end + 1)
+  {
+    *end = '\0';
+    strcpy(arg, buf); // 将命令行参数拷贝到arg中
+    printf("arg: %s ", arg);
+    //cmd[argc - 1] = arg; // 将arg作为命令行参数
+    //int pid = fork();
+    //if (pid < 0)
+    //{
+    //  fprintf(STDERR, "xargs: fork error\n");
+    //  exit(1);
+    //}
+    //else if (pid == 0)
+    //{
+    //  if (exec(argv[1], cmd) < 0)
+    //  {
+    //    fprintf(STDERR, "xargs: exec error\n");
+    //    exit(1);
+    //  }
+    //  exit(0);
+    //}
+    //else
+    //{
+    //  wait(NULL);
+    //}
+  }
 
   return 0;
 }
