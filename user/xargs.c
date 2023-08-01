@@ -38,6 +38,12 @@ int main(int argc, char* argv[])
     cmd[i - 1] = argv[i];
   }
 
+  // 打印命令行参数
+  for (int i = 0; i < argc - 1; i++)
+  {
+    printf("cmd: %s\n", cmd[i]);
+  }
+
   // 读取标准输入
   char buf[MAX_ARG_LEN];
   int n;
@@ -87,7 +93,7 @@ int main(int argc, char* argv[])
   {
     *end = '\0';
     strcpy(arg, buf); // 将命令行参数拷贝到arg中
-    printf("arg: %s ", arg);
+    printf("arg: %s\n", arg);
     //cmd[argc - 1] = arg; // 将arg作为命令行参数
     //int pid = fork();
     //if (pid < 0)
