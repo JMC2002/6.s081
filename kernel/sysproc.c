@@ -103,6 +103,18 @@ sys_trace(void)
 uint64
 sys_sysinfo(void)
 {
+  uint64 addr; // 指向sysinfo结构体的指针
+  struct sysinfo info;
+
+  if (argaddr(0, &addr) < 0) // 尝试从用户空间读取参数
+    return -1;
+
+  // TODO: 计算空闲内存的大小
+
+  // TODO: 计算内存中非UNUSED的进程的数量
+
+  if (copyout(myproc()->pagetable, addr, (char *)&info, sizeof(info)) < 0) // 将内核空间的sysinfo结构体复制到用户空间
+    return -1;
 
   return 0;
 }
