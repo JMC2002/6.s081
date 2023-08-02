@@ -109,7 +109,7 @@ sys_sysinfo(void)
   if (argaddr(0, &addr) < 0) // 尝试从用户空间读取参数
     return -1;
 
-  // TODO: 计算空闲内存的大小
+  info.freemem = kfree_mem_cnt(); // 获取内存中空闲的内存大小
 
   // TODO: 计算内存中非UNUSED的进程的数量
 
