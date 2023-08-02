@@ -111,7 +111,7 @@ sys_sysinfo(void)
 
   info.freemem = kfree_mem_cnt(); // 获取内存中空闲的内存大小
 
-  // TODO: 计算内存中非UNUSED的进程的数量
+  info.nproc = get_free_proc_num(); // 获取内存中非UNUSED的进程的数量
 
   if (copyout(myproc()->pagetable, addr, (char *)&info, sizeof(info)) < 0) // 将内核空间的sysinfo结构体复制到用户空间
     return -1;
