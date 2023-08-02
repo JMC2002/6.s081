@@ -168,8 +168,8 @@ syscall(void)
     // and store its return value in p->trapframe->a0
     p->trapframe->a0 = syscalls[num]();
     if ((p->mask >> num) & 1) { // 判断系统调用是否被跟踪
-      printf("%d %s: syscall %s -> %d\n",
-              p->pid, p->name, syscallnames[num], p->trapframe->a0);
+      printf("%d: syscall %s -> %d\n",
+              p->pid, syscallnames[num], p->trapframe->a0);
     }
   } else {
     printf("%d %s: unknown sys call %d\n",
