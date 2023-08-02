@@ -1,1 +1,1 @@
-usertrap
+usertrap()
