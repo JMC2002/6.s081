@@ -685,3 +685,17 @@ procdump(void)
     printf("\n");
   }
 }
+
+// 计算非空闲进程的数量
+uint64
+get_free_proc_num(void)
+{
+  uint64 num = 0;
+  for(struct proc* p = proc; p < &proc[NPROC]; p++){
+    acquire(&p->lock);    // state是临界资源，需要加锁
+    if (p->state != UNUSED)
+      num++;
+    release(&p->lock);
+  }
+  return num;
+}
