@@ -106,8 +106,7 @@ sys_sysinfo(void)
   uint64 addr; // 指向sysinfo结构体的指针
   struct sysinfo info;
 
-  if (argaddr(0, &addr) < 0) // 尝试从用户空间读取参数
-    return -1;
+  argaddr(0, &addr);  // 尝试从用户空间读取参数
 
   info.freemem = kfree_mem_cnt(); // 获取内存中空闲的内存大小
 
