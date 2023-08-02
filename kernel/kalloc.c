@@ -83,7 +83,7 @@ kalloc(void)
 
 // 计算空闲内存大小
 uint64
-kfree_mem(void)
+kfree_mem_cnt(void)
 {
   struct run *r;
   uint64 cnt = 0;
