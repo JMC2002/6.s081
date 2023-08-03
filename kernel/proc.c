@@ -205,8 +205,7 @@ proc_pagetable(struct proc *p)
 #ifdef LAB_PGTBL // 模仿着memlayout.h加上条件编译
   // 映射到USYSCALL
   if (mappages(pagetable, USYSCALL, PGSIZE,
-    // TODO: 还差后面两个参数
-  ) < 0) {
+               (uint64)(p->usyscall), PTE_R | PTE_U) < 0) {
     uvmunmap(pagetable, TRAMPOLINE, 1, 0);
     uvmunmap(pagetable, TRAPFRAME, 1, 0);
     uvmfree(pagetable, 0);
