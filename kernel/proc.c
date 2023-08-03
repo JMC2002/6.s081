@@ -132,14 +132,14 @@ found:
     return 0;
   }
 
-#ifdef LAB_PGTBL 
+//#ifdef LAB_PGTBL 
   if ((p->usyscall = (struct usyscall*)kalloc()) == 0) {
     freeproc(p);
     release(&p->lock);
     return 0;
   }
   p->usyscall->pid = p->pid; // 别忘了给usyscall的pid赋值
-#endif
+//#endif
 
   // An empty user page table.
   p->pagetable = proc_pagetable(p);
@@ -167,11 +167,11 @@ freeproc(struct proc *p)
   if(p->trapframe)
     kfree((void*)p->trapframe);
   p->trapframe = 0;
-#ifdef LAB_PGTBL
+//#ifdef LAB_PGTBL
 if (p->usyscall)
     kfree((void*)p->usyscall);
   p->usyscall = 0;
-#endif
+//#endif
   if(p->pagetable)
     proc_freepagetable(p->pagetable, p->sz);
   p->pagetable = 0;
@@ -216,7 +216,7 @@ proc_pagetable(struct proc *p)
     return 0;
   }
 
-#ifdef LAB_PGTBL // 模仿着memlayout.h加上条件编译
+//#ifdef LAB_PGTBL // 模仿着memlayout.h加上条件编译
   // 映射到USYSCALL
   if (mappages(pagetable, USYSCALL, PGSIZE,
                (uint64)(p->usyscall), PTE_R | PTE_U) < 0) {
@@ -225,7 +225,7 @@ proc_pagetable(struct proc *p)
     uvmfree(pagetable, 0);
     return 0;
   }
-#endif
+//#endif
 
   return pagetable;
 }
@@ -237,9 +237,9 @@ proc_freepagetable(pagetable_t pagetable, uint64 sz)
 {
   uvmunmap(pagetable, TRAMPOLINE, 1, 0);
   uvmunmap(pagetable, TRAPFRAME, 1, 0);
-#ifdef LAB_PGTBL
+//#ifdef LAB_PGTBL
   uvmunmap(pagetable, USYSCALL, 1, 0);
-#endif
+//#endif
   uvmfree(pagetable, sz);
 }
 
