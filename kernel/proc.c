@@ -202,6 +202,18 @@ proc_pagetable(struct proc *p)
     return 0;
   }
 
+#ifdef LAB_PGTBL // 模仿着memlayout.h加上条件编译
+  // 映射到USYSCALL
+  if (mappages(pagetable, USYSCALL, PGSIZE,
+    // TODO: 还差后面两个参数
+  ) < 0) {
+    uvmunmap(pagetable, TRAMPOLINE, 1, 0);
+    uvmunmap(pagetable, TRAPFRAME, 1, 0);
+    uvmfree(pagetable, 0);
+    return 0;
+  }
+#endif
+
   return pagetable;
 }
 
