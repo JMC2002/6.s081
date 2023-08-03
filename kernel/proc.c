@@ -132,6 +132,15 @@ found:
     return 0;
   }
 
+#ifdef LAB_PGTBL 
+  if ((p->usyscall = (struct usyscall*)kalloc()) == 0) {
+    freeproc(p);
+    release(&p->lock);
+    return 0;
+  }
+  p->usyscall->pid = p->pid; // 别忘了给usyscall的pid赋值
+#endif
+
   // An empty user page table.
   p->pagetable = proc_pagetable(p);
   if(p->pagetable == 0){
