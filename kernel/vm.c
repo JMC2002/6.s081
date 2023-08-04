@@ -457,7 +457,7 @@ vmprint_dfs(pagetable_t pagetable, uint depth)
     if (pte & PTE_V) {
       pte_t child = PTE2PA(pte);
       printf("%s%d: pte %p pa %p\n", prefix[depth], i, pte, child);
-      if ((child & (PTE_R | PTE_W | PTE_X)) == 0) {
+      if ((pte & (PTE_R | PTE_W | PTE_X)) == 0) {
         vmprint_dfs((pagetable_t)child, depth + 1);
       }
     }
