@@ -69,12 +69,27 @@ sys_sleep(void)
   return 0;
 }
 
-
+#define LAB_PGTBL
 #ifdef LAB_PGTBL
 int
 sys_pgaccess(void)
 {
-  // lab pgtbl: your code here.
+  proc* p = myproc();
+
+  uint64 va;             // 待检测页表起始地址
+  int num_pages;         // 待检测页表的页数
+  uint64 access_mask;    // 记录检测结果掩码的地址
+
+  // 从用户栈中获取参数
+  argaddr(0, &va);  
+  argint(1, &num_pages);
+  argaddr(2, &access_mask);
+
+  uint mask = 0;
+
+  // TODO
+
+  copyout(p->pagetable, access_mask, (char*)&mask, sizeof(mask));
   return 0;
 }
 #endif
