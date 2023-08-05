@@ -74,8 +74,6 @@ sys_sleep(void)
 int
 sys_pgaccess(void)
 {
-  proc* p = myproc();
-
   uint64 va;             // 待检测页表起始地址
   int num_pages;         // 待检测页表的页数
   uint64 access_mask;    // 记录检测结果掩码的地址
@@ -85,11 +83,16 @@ sys_pgaccess(void)
   argint(1, &num_pages);
   argaddr(2, &access_mask);
 
+  if (num_pages <= 0 || num_pages > 512)
+  {
+    return -1;
+  }
+
   uint mask = 0;
 
   // TODO
 
-  copyout(p->pagetable, access_mask, (char*)&mask, sizeof(mask));
+  copyout(myproc()->pagetable, access_mask, (char*)&mask, sizeof(mask));
   return 0;
 }
 #endif
