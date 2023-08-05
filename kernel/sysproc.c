@@ -73,7 +73,7 @@ sys_sleep(void)
 int
 sys_pgaccess(void)
 {
-  proc* p = myproc();
+  struct proc* p = myproc();
 
   uint64 va;             // 待检测页表起始地址
   int num_pages;         // 待检测页表的页数
