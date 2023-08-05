@@ -69,11 +69,12 @@ sys_sleep(void)
   return 0;
 }
 
-#define LAB_PGTBL
 #ifdef LAB_PGTBL
 int
 sys_pgaccess(void)
 {
+  proc* p = myproc();
+
   uint64 va;             // 待检测页表起始地址
   int num_pages;         // 待检测页表的页数
   uint64 access_mask;    // 记录检测结果掩码的地址
@@ -90,9 +91,19 @@ sys_pgaccess(void)
 
   uint mask = 0;
 
-  // TODO
+  // 遍历页表
+  for (int i = 0; i < num_pages; i++)
+  {
+    pte_t* pte = walk(p->pagetable, va + i * PGSIZE, 0);
+    if (pte && (*pte & PTE_V) && (*pte & PTE_A))
+    {
+      *pte &= ~PTE_A;  // 清除访问位
+      mask |= (1 << i);
+    }
+  }
 
-  copyout(myproc()->pagetable, access_mask, (char*)&mask, sizeof(mask));
+  // 将检测结果写入用户栈
+  copyout(p->pagetable, access_mask, (char*)&mask, sizeof(mask));
   return 0;
 }
 #endif
