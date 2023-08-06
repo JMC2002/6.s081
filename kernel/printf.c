@@ -134,11 +134,11 @@ printfinit(void)
   pr.locking = 1;
 }
 
-void 
-backtrace(void)
-{
-  for (uint64 fp = r_fp(), bottom = PGROUNDDOWN(fp); fp > bottom; fp -= 0x10) 
-  {
-    printf("%p\n", *(uint64*)(fp - 0x8)); // 获取并打印返回地址
+void backtrace() {
+  uint64 fp = r_fp();
+  while (fp != PGROUNDUP(fp)) { // 如果已经到达栈底
+    uint64 ra = *(uint64*)(fp - 8); // return address
+    printf("%p\n", ra);
+    fp = *(uint64*)(fp - 16); // previous fp
   }
 }
