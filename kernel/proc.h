@@ -109,5 +109,7 @@ struct proc {
   int alarm_past;                   // 系统调用alarm的过去时间
   int alarm_ticks;                  // 系统调用alarm的间隔
   void (*alarm_handler)();          // 系统调用alarm的待执行的函数
-  struct trapframe* pre_trapframe; // 保存上一次的trapframe
+  struct trapframe* pre_trapframe;  // 保存上一次的trapframe
+
+  uint64 pre_a0;                    // 保存上一次的a0
 };

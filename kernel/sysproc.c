@@ -117,5 +117,5 @@ sys_sigreturn(void)
     p->alarm_past = 0;
     p->alarm_on = 0;
   }
-  return 0;
+  return p->trapframe->a0;
 }
