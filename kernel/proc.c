@@ -147,6 +147,8 @@ found:
   p->context.sp = p->kstack + PGSIZE;
 
   p->alarm_past = 0;
+  p->alarm_ticks = 0;
+  p->alarm_handler = (void*)0;
 
   return p;
 }
