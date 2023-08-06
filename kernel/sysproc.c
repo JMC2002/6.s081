@@ -97,11 +97,12 @@ sys_uptime(void)
 uint64
 sys_sigalarm(void)
 {
-  // 从用户空间获取参数
-  int ticks;
-  void (*handler)(void);
-  argint(0, &ticks);
-  argaddr(1, (uint64*)&handler);
+  struct proc *p = myproc();
+  // 从用户空间获取参数并存储到proc
+  argint(0, &p->alarm_ticks);
+  argaddr(1, (uint64*)&p->alarm_handler);
+  p->alarm_past = 0; // 重置alarm_past
+
 
   return 0;
 }
