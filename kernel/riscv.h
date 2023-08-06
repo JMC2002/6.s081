@@ -336,22 +336,6 @@ r_fp()
   return x;
 }
 
-// 获取a0寄存器的值
-static inline uint64
-r_a0()
-{
-  uint64 x;
-  asm volatile("mv %0, a0" : "=r" (x));
-  return x;
-}
-
-// 向a0寄存器写入值
-static inline void
-w_a0(uint64 x)
-{
-  asm volatile("mv a0, %0" : : "r" (x));
-}
-
 typedef uint64 pte_t;
 typedef uint64 *pagetable_t; // 512 PTEs
 
