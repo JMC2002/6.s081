@@ -138,8 +138,8 @@ void
 backtrace(void)
 {
   for (uint64* fp = (uint64*)r_fp(), *bottom = (uint64*)PGROUNDDOWN((uint64)fp);
-      fp > bottom ; fp--)
+      fp > bottom ; fp = fp[-2])
   {
-    printf("%p\n", *(--fp)); // 获取并打印返回地址
+    printf("%p\n", fp[-1]); // 获取并打印返回地址
   }
 }
