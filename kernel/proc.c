@@ -132,7 +132,7 @@ found:
     return 0;
   }
 
-  if ((p->pre_trap_frame = (struct trapframe*)kalloc()) == 0) {
+  if ((p->pre_trapframe = (struct trapframe*)kalloc()) == 0) {
     freeproc(p);
     release(&p->lock);
     return 0;
@@ -155,7 +155,7 @@ found:
   p->alarm_past = 0;
   p->alarm_ticks = 0;
   p->alarm_handler = (void*)0;
-
+  p->alarm_on = 0;
   return p;
 }
 
@@ -169,9 +169,9 @@ freeproc(struct proc *p)
     kfree((void*)p->trapframe);
   p->trapframe = 0;
 
-  if (p->pre_trap_frame)
-    kfree((void*)p->pre_trap_frame);
-  p->pre_trap_frame = 0;
+  if (p->pre_trapframe)
+    kfree((void*)p->pre_trapframe);
+  p->pre_trapframe = 0;
 
   if(p->pagetable)
     proc_freepagetable(p->pagetable, p->sz);
