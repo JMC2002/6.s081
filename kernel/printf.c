@@ -137,9 +137,8 @@ printfinit(void)
 void 
 backtrace(void)
 {
-  uint64 fp = r_fp();
-  for (; fp != PGROUNDDOWN(fp); fp -= 0x10)
+  for (uint64* fp = (uint64*)r_fp(), *bottom = PGROUNDDOWN(fp); fp > bottom ; fp--)
   {
-    printf("%p\n", *(uint64*)(fp - 0x8)); // 获取并打印返回地址
+    printf("%p\n", *(--fp)); // 获取并打印返回地址
   }
 }
