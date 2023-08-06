@@ -133,3 +133,12 @@ printfinit(void)
   initlock(&pr.lock, "pr");
   pr.locking = 1;
 }
+
+void 
+backtrace(void)
+{
+  for (uint64 fp = r_fp(), bottom = PGROUNDDOWN(fp); fp > bottom; fp -= 0x10) 
+  {
+    printf("%p\n", *(uint64*)(fp - 0x8)); // 获取并打印返回地址
+  }
+}
