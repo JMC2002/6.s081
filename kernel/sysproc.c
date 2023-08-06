@@ -93,3 +93,21 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
+
+uint64
+sys_sigalarm(void)
+{
+  // 从用户空间获取参数
+  int ticks;
+  void (*handler)(void);
+  argint(0, &ticks);
+  argaddr(1, (uint64*)&handler);
+
+  return 0;
+}
+
+uint64
+sys_sigreturn(void)
+{
+  return 0;
+}
