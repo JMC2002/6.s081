@@ -14,6 +14,11 @@ void freerange(void *pa_start, void *pa_end);
 extern char end[]; // first address after kernel.
                    // defined by kernel.ld.
 
+// 引用计数的锁和保存值
+struct spinlock cow_ref_lock;
+int cow_cnt[(PHYSTOP - KERNBASE) / PGSIZE];
+#define PA2IDX(pa) (((uint64)(pa) - KERNBASE) / PGSIZE)
+
 struct run {
   struct run *next;
 };
@@ -24,9 +29,26 @@ struct {
 } kmem;
 
 void
+inc_ref(void* pa) // 自增引用计数
+{
+  acquire(&cow_ref_lock);
+  cow_cnt[PA2IDX(pa)]++;
+  release(&cow_ref_lock);
+}
+
+void
+dec_ref(void* pa) // 自减引用计数
+{
+  acquire(&cow_ref_lock);
+  cow_cnt[PA2IDX(pa)]--;
+  release(&cow_ref_lock);
+}
+
+void
 kinit()
 {
   initlock(&kmem.lock, "kmem");
+  initlock(&cow_ref_lock, "cow_ref_lock");  // 初始化引用计数的锁
   freerange(end, (void*)PHYSTOP);
 }
 
