@@ -355,8 +355,8 @@ copyout(pagetable_t pagetable, uint64 dstva, char *src, uint64 len)
 
   while(len > 0){
     va0 = PGROUNDDOWN(dstva);
-    if (is_cow_fault(p->pagetable, va0)) {
-      if (handle_cow_fault(p->pagetable, va0) < 0) {
+    if (is_cow_fault(pagetable, va0)) {
+      if (handle_cow_fault(pagetable, va0) < 0) {
         printf("copyout(): alloc failed!\n");
         return -1;
       }
