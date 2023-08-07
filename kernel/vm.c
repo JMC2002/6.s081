@@ -316,7 +316,7 @@ uvmcopy(pagetable_t old, pagetable_t new, uint64 sz)
     if((*pte & PTE_V) == 0)
       panic("uvmcopy: page not present");
 
-    if (*pte & PTE_W)
+    if (*pte & PTE_W) // 对于本身可写的页才去取消写权限
     {
       *pte &= ~PTE_W; // 取消写权限
       *pte |= PTE_C; // 设置写时复制标志
@@ -450,6 +450,8 @@ copyinstr(pagetable_t pagetable, char *dst, uint64 srcva, uint64 max)
 int 
 is_cow_fault(pagetable_t pagetable, uint64 va)
 {
+  if (va >= MAXVA)
+    return 0;
   pte_t* pte = walk(pagetable, PGROUNDDOWN(va), 0);
   return pte && (*pte & (PTE_V | PTE_U | PTE_C));
 }
