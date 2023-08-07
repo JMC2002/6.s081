@@ -68,11 +68,9 @@ freerange(void *pa_start, void *pa_end)
 void
 kfree(void *pa)
 {
-  if (cow_cnt[PA2IDX(r)] > 1) // 只有引用计数为1时才释放
-  { 
-    dec_ref(r);
+  dec_ref(r);
+  if (cow_cnt[PA2IDX(r)] > 0) // 只有引用计数为1时才释放
     return;
-  }
 
   struct run *r;
 
