@@ -72,7 +72,10 @@ usertrap(void)
   else if (r_scause() == 15) {
     uint64 stval = r_stval();
     if (is_cow_fault(p->pagetable, stval)) {
-      handle_cow_fault(p->pagetable, stval);
+      if (handle_cow_fault(p->pagetable, stval) < 0) {
+        printf("usertrap(): alloc failed!\n");
+        p->killed = 1;
+      }
     }
     else {
       goto unexpected;
