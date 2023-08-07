@@ -73,8 +73,8 @@ usertrap(void)
     uint64 stval = r_stval();
     if (is_cow_fault(p->pagetable, stval)) {
       if (handle_cow_fault(p->pagetable, stval) < 0) {
-        printf("usertrap(): alloc failed!\n");
-        p->killed = 1;
+        printf("usertrap(): alloc failed!\n"); 
+        p->killed = 1;   // 当内存分配完，直接kill
       }
     }
     else {
