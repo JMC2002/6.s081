@@ -441,13 +441,14 @@ copyinstr(pagetable_t pagetable, char *dst, uint64 srcva, uint64 max)
 int 
 is_cow_fault(pagetable_t pagetable, uint64 va)
 {
-  pte_t* pte = walk(pagetable, va, 0);
+  pte_t* pte = walk(pagetable, PGROUNDDOWN(va), 0);
   return pte && (*pte & (PTE_V | PTE_U | PTE_C));
 }
 
 int
 handle_cow_fault(pagetable_t pagetable, uint64 va)
 {
+  va = PGROUNDDOWN(va);
   pte_t* pte = walk(pagetable, va, 0);
   if (!pte) {
     return -1;
