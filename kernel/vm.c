@@ -436,3 +436,34 @@ copyinstr(pagetable_t pagetable, char *dst, uint64 srcva, uint64 max)
     return -1;
   }
 }
+
+int 
+is_cow_fault(pagetable_t pagetable, uint64 va)
+{
+  pte_t* pte = walk(pagetable, va, 0);
+  return pte && (*pte & (PTE_V | PTE_U | PTE_C));
+}
+
+int
+handle_cow_fault(pagetable_t pagetable, uint64 va)
+{
+  pte_t* pte = walk(pagetable, va, 0);
+  if (!pte) {
+    return -1;
+  }
+  uint64 pa = PTE2PA(*pte);
+  uint flags = PTE_FLAGS(*pte) & ~PTE_C | PTE_W;  // 取消写时复制标志，设置写权限
+
+  char* mem = kalloc();
+  if (!mem) {
+    return -1;
+  }
+  memmove(mem, (char*)pa, PGSIZE);
+  uvmunmap(pagetable, va, 1, 1);  // 取消映射
+
+  if (mappages(pagetable, va, PGSIZE, (uint64)mem, flags) != 0) {
+    kfree(mem);
+    return -1;
+  }
+  return 0;
+}
