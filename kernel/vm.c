@@ -355,6 +355,12 @@ copyout(pagetable_t pagetable, uint64 dstva, char *src, uint64 len)
 
   while(len > 0){
     va0 = PGROUNDDOWN(dstva);
+    if (is_cow_fault(p->pagetable, stval)) {
+      if (handle_cow_fault(p->pagetable, stval) < 0) {
+        printf("copyout(): alloc failed!\n");
+        return -1;
+      }
+    }
     pa0 = walkaddr(pagetable, va0);
     if(pa0 == 0)
       return -1;
