@@ -38,22 +38,22 @@ usertrap(void)
 {
   int which_dev = 0;
 
-  if((r_sstatus() & SSTATUS_SPP) != 0)
+  if ((r_sstatus() & SSTATUS_SPP) != 0)
     panic("usertrap: not from user mode");
 
   // send interrupts and exceptions to kerneltrap(),
   // since we're now in the kernel.
   w_stvec((uint64)kernelvec);
 
-  struct proc *p = myproc();
-  
+  struct proc* p = myproc();
+
   // save user program counter.
   p->trapframe->epc = r_sepc();
-  
-  if(r_scause() == 8){
+
+  if (r_scause() == 8) {
     // system call
 
-    if(killed(p))
+    if (killed(p))
       exit(-1);
 
     // sepc points to the ecall instruction,
@@ -65,19 +65,31 @@ usertrap(void)
     intr_on();
 
     syscall();
-  } else if((which_dev = devintr()) != 0){
+  }
+  else if ((which_dev = devintr()) != 0) {
     // ok
-  } else {
+  }
+  else if (r_scause() == 15) {
+    uint64 stval = r_stval();
+    if (is_cow_fault(stval)) {
+      handle_cow_fault(stval);
+    }
+    else {
+      goto unexpected;
+    }
+  }
+  else {
+unexpected:
     printf("usertrap(): unexpected scause %p pid=%d\n", r_scause(), p->pid);
     printf("            sepc=%p stval=%p\n", r_sepc(), r_stval());
     setkilled(p);
   }
 
-  if(killed(p))
+  if (killed(p))
     exit(-1);
 
   // give up the CPU if this is a timer interrupt.
-  if(which_dev == 2)
+  if (which_dev == 2)
     yield();
 
   usertrapret();
