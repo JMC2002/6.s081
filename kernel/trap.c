@@ -71,7 +71,7 @@ usertrap(void)
   }
   else if (r_scause() == 15) {
     uint64 stval = r_stval();
-    if (is_cow_fault(stval)) {
+    if (is_cow_fault(p->pagetable, stval)) {
       handle_cow_fault(stval);
     }
     else {
