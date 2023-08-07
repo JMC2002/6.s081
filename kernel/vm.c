@@ -316,8 +316,11 @@ uvmcopy(pagetable_t old, pagetable_t new, uint64 sz)
     if((*pte & PTE_V) == 0)
       panic("uvmcopy: page not present");
 
-    *pte &= ~PTE_W; // 取消写权限
-    *pte |=  PTE_C; // 设置写时复制标志
+    if (*pte & PTE_W)
+    {
+      *pte &= ~PTE_W; // 取消写权限
+      *pte |= PTE_C; // 设置写时复制标志
+    }
     pa = PTE2PA(*pte);
     flags = PTE_FLAGS(*pte);
     if(mappages(new, i, PGSIZE, pa, flags) != 0){
