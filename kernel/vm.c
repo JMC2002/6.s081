@@ -453,7 +453,7 @@ handle_cow_fault(pagetable_t pagetable, uint64 va)
     return -1;
   }
   uint64 pa = PTE2PA(*pte);
-  uint flags = PTE_FLAGS(*pte) & ~PTE_C | PTE_W;  // 取消写时复制标志，设置写权限
+  uint flags = (PTE_FLAGS(*pte) & ~PTE_C) | PTE_W;  // 取消写时复制标志，设置写权限
 
   char* mem = kalloc();
   if (!mem) {
